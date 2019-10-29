@@ -14,7 +14,7 @@ steps:
     git: github
   check_blueprint:
     title: Check the blueprint for each system
-    stage: prepare
+    stage: test
     image: alpine
     commands:
     - cat blueprint.yml
