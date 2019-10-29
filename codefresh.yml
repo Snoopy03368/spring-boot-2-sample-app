@@ -2,8 +2,6 @@ version: '1.0'
 stages:
   - prepare
   - test
-  - integration
-  - build
 steps:
   main_clone:
     title: Cloning main repository...
