@@ -9,7 +9,7 @@ steps:
     title: Cloning main repository...
     stage: prepare
     type: git-clone
-    repo: 'Snoopy03368/spring-boot-2-sample-app'
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: master
     git: github
   check_blueprint:
