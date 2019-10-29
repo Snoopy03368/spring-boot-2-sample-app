@@ -12,6 +12,12 @@ steps:
     repo: 'codefresh-contrib/spring-boot-2-sample-app'
     revision: master
     git: github
+  check_blueprint:
+    title: Check the blueprint for each system
+    stage: prepare
+    image: alpine
+    commands:
+    - cat blueprint.yml
   MyUnitTests:
     title: Compile/Unit test
     stage: test
@@ -23,7 +29,7 @@ steps:
     stage: integration
     image: maven:3.5.2-jdk-8-alpine
     commands:
-     - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository verify      
+     - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository verify
   MyAppDockerImage:
     title: Building Docker Image
     type: build
