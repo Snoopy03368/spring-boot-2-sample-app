@@ -17,6 +17,7 @@ steps:
     stage: test
     image: alpine
     commands:
+    - ls -altr
     - cat blueprint.yml
   MyUnitTests:
     title: Compile/Unit test
