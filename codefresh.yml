@@ -25,8 +25,9 @@ steps:
     working_directory: ${{main_clone}}
     commands:
       - mkdir -p ${CF_VOLUME_PATH}/.aws
-      - 'echo -n $AWS_CONFIG_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/config'
+      - 'echo -n $AWS_CONFIG | base64 -d > ${CF_VOLUME_PATH}/.aws/config'
       - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
+      - cf_export AWS_CONFIG_FILE=${CF_VOLUME_PATH}/.aws/config
       - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
   check_blueprint:
     title: Check the blueprint for each system
@@ -35,6 +36,8 @@ steps:
     commands:
     - ls -altr
     - cat blueprint.yml
+    - 'echo -n $AWS_CONFIG_FILE'
+    - 'echo -n $AWS_SHARED_CREDENTIALS_FILE'
     - aws sts get-caller-identity
   MyUnitTests:
     title: Compile/Unit test
