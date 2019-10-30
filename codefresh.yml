@@ -30,7 +30,7 @@ steps:
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
-    image: aws-cli
+    image:  r.cfcr.io/snoopy03368/aws-cli:master
     commands:
     - cat blueprint.yml
     - aws sts get-caller-identity
