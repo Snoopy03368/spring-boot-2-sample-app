@@ -33,7 +33,7 @@ steps:
     image:  r.cfcr.io/snoopy03368/aws-cli:master  # TODO:  would use some kind of versioning scheme?
     commands:
     - cat blueprint.yml
-    - aws sts get-caller-identity
+    - aws s3 cp blueprint.yml s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
   MyUnitTests:
     title: Compile/Unit test
     stage: test
