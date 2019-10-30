@@ -16,11 +16,11 @@ steps:
     stage: prepare
     image_name: aws-cli
     working_directory: ./
-    dockerfile: Dockerfile-aws
+    tag: 'non-multi-stage'
+    dockerfile: Dockerfile
   CreateAWSCredentialsFile:
-    type: build
     stage: test
-    image: '${{AwsDockerImage}}'
+    image: ${{AwsDockerImage}}
     title: Creating AWS Credentials File...
     working_directory: ${{main_clone}}
     commands:
