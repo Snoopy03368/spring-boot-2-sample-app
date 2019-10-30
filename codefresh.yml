@@ -17,7 +17,7 @@ steps:
     image_name: aws-cli
     working_directory: ./
     tag: 'non-multi-stage'
-    dockerfile: Dockerfile
+    dockerfile: Dockerfile-aws
   CreateAWSCredentialsFile:
     stage: test
     image: ${{AwsDockerImage}}
