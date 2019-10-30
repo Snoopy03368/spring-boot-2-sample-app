@@ -24,7 +24,6 @@ steps:
     title: Creating AWS Credentials File...
     working_directory: ${{main_clone}}
     commands:
-      - 'echo $AWS_CREDENTIALS_FILE'
       - mkdir -p ${CF_VOLUME_PATH}/.aws
       - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
       - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
@@ -32,15 +31,8 @@ steps:
     title: Check the blueprint for each system
     stage: test
     image: aws-cli
-    environment:
-      - 'AWS_CONFIG_FILE=${{AWS_CONFIG}}'
-      - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
     commands:
-    - ls -altr
     - cat blueprint.yml
-    - 'cat ${CF_VOLUME_PATH}/.aws/credentials'
-    - 'echo $AWS_CONFIG_FILE'
-    - 'echo $AWS_SHARED_CREDENTIALS_FILE'
     - aws sts get-caller-identity
   MyUnitTests:
     title: Compile/Unit test
