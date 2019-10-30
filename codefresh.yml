@@ -20,12 +20,13 @@ steps:
     dockerfile: Dockerfile-aws
   CreateAWSCredentialsFile:
     stage: test
-    image: alpine
+    image: ${{AwsDockerImage}}
     title: Creating AWS Credentials File...
     working_directory: ${{main_clone}}
     commands:
       - mkdir -p ${CF_VOLUME_PATH}/.aws
       - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
+      - aws configure set default.region us-east-1
       - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
   check_blueprint:
     title: Check the blueprint for each system
