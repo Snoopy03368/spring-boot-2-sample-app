@@ -43,7 +43,8 @@ steps:
     image:  "${{ToolsDockerImage}}"
     commands:
     - BLUEPRINT_VERSION_URL=`cat blueprint-version-url`
-    - curl "$BLUEPRINT_VERSION_URL"
+    - echo $BLUEPRINT_VERSION_URL
+#    - curl "$BLUEPRINT_VERSION_URL"
   MyUnitTests:
     title: Compile/Unit test
     stage: test
