@@ -26,6 +26,7 @@ steps:
     commands:
       - mkdir -p ${CF_VOLUME_PATH}/.aws
       - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
+      - wc -l ${CF_VOLUME_PATH}/.aws/credentials
       - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
   check_blueprint:
     title: Check the blueprint for each system
