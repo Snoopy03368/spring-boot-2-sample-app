@@ -10,14 +10,14 @@ steps:
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: master
     git: github
-#  AwsDockerImage:    # TODO:  would move this too another pipeline
-#    title: Building Docker Image for AWS Cli
-#    type: build
-#    stage: prepare
-#    image_name: aws-cli
-#    working_directory: ./
-#    tag: 'non-multi-stage'
-#    dockerfile: Dockerfile-aws
+  ToolsDockerImage:    # TODO:  would move this too another pipeline
+    title: Building Docker Image for AWS Cli, jq, yq, etc.
+    type: build
+    stage: prepare
+    image_name: tools
+    working_directory: ./
+    tag: 'non-multi-stage'
+    dockerfile: Dockerfile-aws
   CreateAWSCredentialsFile:
     stage: test
     image: alpine
@@ -31,7 +31,7 @@ steps:
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
-    image:  r.cfcr.io/snoopy03368/aws-cli:master  # TODO:  would use some kind of versioning scheme?
+    image:  ${{AwsDockerImage}}
     commands:
     - cat blueprint.yml
     - aws s3 cp blueprint.yml s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}

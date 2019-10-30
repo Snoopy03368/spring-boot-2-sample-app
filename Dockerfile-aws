@@ -1,7 +1,23 @@
-FROM docker:18.06
+FROM python:3.8.0-alpine3.10
 
-RUN apk update && \
-apk -Uuv add python py-pip && \
-pip install awscli && \
-apk --purge -v del py-pip && \
-rm /var/cache/apk/*
+ENV AWSCLI_VERSION "1.16.266"
+ENV JQ_VERSION "1.6-r0"
+ENV YQ_VERSION "2.7.2"
+
+# Install jq and yq for JSON / YAML parsing
+
+RUN apk add --update \
+  jq=1.6-r0 yq=2.7.2 \
+  && rm -rf /var/cache/apk/*
+
+# Install AWS CLI
+
+RUN pip install --no-cache-dir awscli==${AWSCLI_VERSION}
+
+LABEL alpine="3.10"
+LABEL jq="${JQ_VERSION}"
+LABEL yq="${YQ_VERSION}"
+LABEL python="3.8.0"
+LABEL aws-cli="${AWSCLI_VERSION}"
+
+VOLUME /root/.aws
