@@ -10,6 +10,14 @@ steps:
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: master
     git: github
+  CreateAWSCredentialsFile:
+    image: alpine
+    title: Creating AWS Credentials File...
+    working_directory: ${{main_clone}}
+    commands:
+      - mkdir -p ${CF_VOLUME_PATH}/.aws
+      - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
+      - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
@@ -17,6 +25,7 @@ steps:
     commands:
     - ls -altr
     - cat blueprint.yml
+    - aws sts get-caller-identity
   MyUnitTests:
     title: Compile/Unit test
     stage: test
