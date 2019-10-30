@@ -42,7 +42,8 @@ steps:
     stage: prepare
     image:  "${{ToolsDockerImage}}"
     commands:
-    - cat blueprint-version-url
+    - BLUEPRINT_VERSION_URL=`cat blueprint-version-url`
+    - curl "$BLUEPRINT_VERSION_URL"
   MyUnitTests:
     title: Compile/Unit test
     stage: test
