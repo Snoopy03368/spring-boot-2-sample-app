@@ -10,14 +10,14 @@ steps:
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: master
     git: github
-  AwsDockerImage:
-    title: Building Docker Image for AWS Cli
-    type: build
-    stage: prepare
-    image_name: aws-cli
-    working_directory: ./
-    tag: 'non-multi-stage'
-    dockerfile: Dockerfile-aws
+#  AwsDockerImage:
+#    title: Building Docker Image for AWS Cli
+#    type: build
+#    stage: prepare
+#    image_name: aws-cli
+#    working_directory: ./
+#    tag: 'non-multi-stage'
+#    dockerfile: Dockerfile-aws
   CreateAWSCredentialsFile:
     stage: test
     image: alpine
@@ -31,7 +31,7 @@ steps:
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
-    image: ${{AwsDockerImage}}
+    image: aws-cli
     environment:
       - 'AWS_CONFIG_FILE=${{AWS_CONFIG}}'
       - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
