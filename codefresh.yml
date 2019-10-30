@@ -24,10 +24,9 @@ steps:
     title: Creating AWS Credentials File...
     working_directory: ${{main_clone}}
     commands:
+      - 'echo $AWS_CREDENTIALS_FILE'
       - mkdir -p ${CF_VOLUME_PATH}/.aws
-      - 'echo -n $AWS_CONFIG | base64 -d > ${CF_VOLUME_PATH}/.aws/config'
       - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
-      - cf_export AWS_CONFIG_FILE=${CF_VOLUME_PATH}/.aws/config
       - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
   check_blueprint:
     title: Check the blueprint for each system
