@@ -33,6 +33,9 @@ steps:
     title: Check the blueprint for each system
     stage: test
     image: ${{AwsDockerImage}}
+    environment:
+      - 'AWS_CONFIG_FILE=${{AWS_CONFIG}}'
+      - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
     commands:
     - ls -altr
     - cat blueprint.yml
