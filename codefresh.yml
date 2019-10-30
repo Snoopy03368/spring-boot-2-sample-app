@@ -20,7 +20,7 @@ steps:
     dockerfile: Dockerfile-aws
   CreateAWSCredentialsFile:
     stage: test
-    image: ${{AwsDockerImage}}
+    image: alpine
     title: Creating AWS Credentials File...
     working_directory: ${{main_clone}}
     commands:
@@ -30,7 +30,7 @@ steps:
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
-    image: alpine
+    image: ${{AwsDockerImage}}
     commands:
     - ls -altr
     - cat blueprint.yml
