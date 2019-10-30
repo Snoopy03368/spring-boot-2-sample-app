@@ -34,7 +34,7 @@ steps:
     image:  "${{ToolsDockerImage}}"
     commands:
     - cat blueprint.yml
-    - jq -n --arg authorEmails "${{CF_COMMIT_AUTHOR}}" --arg version "${{CF_SHORT_REVISION}}" --arg triggerUrl "${{CF_COMMIT_URL}}" --arg triggerRev "${{CF_SHORT_REVISION}}" --argjson blueprint "`yq -c '.' blueprint.yml`" '{"blueprint": $ARGS.named["blueprint"], "triggerRev": $ARGS.named["triggerRev"], "triggerUrl":$ARGS.named["triggerUrl"], "authorEmails": $ARGS.named["authorEmails"], "version": $ARGS.named["version"]}'>blueprint-version.json
+    - 'jq -n --arg authorEmails "${{CF_COMMIT_AUTHOR}}" --arg version "${{CF_SHORT_REVISION}}" --arg triggerUrl "${{CF_COMMIT_URL}}" --arg triggerRev "${{CF_SHORT_REVISION}}" --argjson blueprint "`yq -c '.' blueprint.yml`" '{"blueprint": $ARGS.named["blueprint"], "triggerRev": $ARGS.named["triggerRev"], "triggerUrl":$ARGS.named["triggerUrl"], "authorEmails": $ARGS.named["authorEmails"], "version": $ARGS.named["version"]}'>blueprint-version.json'
     - aws s3 cp blueprint-version.json s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
   MyUnitTests:
     title: Compile/Unit test
