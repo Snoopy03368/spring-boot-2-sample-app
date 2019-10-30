@@ -7,12 +7,11 @@ ENV YQ_VERSION "2.7.2"
 # Install jq and yq for JSON / YAML parsing
 
 RUN apk add --update jq=${JQ_VERSION} \
-  && rm -rf /var/cache/apk/* \
-  && pip install --no-cache-dir yq==${YQ_VERSION}
+  && rm -rf /var/cache/apk/*
 
 # Install AWS CLI
 
-RUN pip install --no-cache-dir awscli==${AWSCLI_VERSION}
+RUN pip install --no-cache-dir awscli==${AWSCLI_VERSION} yq==${YQ_VERSION}
 
 LABEL alpine="3.10"
 LABEL jq="${JQ_VERSION}"

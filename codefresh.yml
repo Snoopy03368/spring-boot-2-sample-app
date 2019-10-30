@@ -31,7 +31,7 @@ steps:
   check_blueprint:
     title: Check the blueprint for each system
     stage: test
-    image:  ${{AwsDockerImage}}
+    image:  "${{ToolsDockerImage}}"
     commands:
     - cat blueprint.yml
     - aws s3 cp blueprint.yml s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
