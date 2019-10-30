@@ -39,8 +39,9 @@ steps:
     commands:
     - ls -altr
     - cat blueprint.yml
-    - 'echo -n $AWS_CONFIG_FILE'
-    - 'echo -n $AWS_SHARED_CREDENTIALS_FILE'
+    - 'cat ${CF_VOLUME_PATH}/.aws/credentials'
+    - 'echo $AWS_CONFIG_FILE'
+    - 'echo $AWS_SHARED_CREDENTIALS_FILE'
     - aws sts get-caller-identity
   MyUnitTests:
     title: Compile/Unit test
