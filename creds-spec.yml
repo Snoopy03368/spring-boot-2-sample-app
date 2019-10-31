@@ -1,0 +1,10 @@
+apiVersion: "v1"
+kind: "context"
+owner: "account"
+metadata:
+  name: "creds"
+spec:
+  type: "secret"
+  data:
+    AWS_CREDENTIALS_FILE: "put secret here"
+    FSSESSIONID: "put secret here"

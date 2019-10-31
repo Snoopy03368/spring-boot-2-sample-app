@@ -1,0 +1,7 @@
+[default]
+assumed_role = False
+aws_access_key_id=replace
+aws_secret_access_key=replace
+aws_security_token=replace
+expiration=replace
+
