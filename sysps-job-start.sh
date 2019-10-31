@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 FSSESSIONID=$1
 PHASE=$2
