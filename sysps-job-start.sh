@@ -24,7 +24,6 @@ HTTP_STATUS=`curl -s -w "%{http_code}" \
   -H 'Cache-Control: no-cache' \
   -H 'Connection: keep-alive' \
   -H 'Content-Type: application/json' \
-  -H 'Host: api.fsdpt.org' \
   -H 'User-Agent: roskelleycj/1.0 (manual)' \
   -H 'cache-control: no-cache' \
   -d "{\"systemContext\": {
