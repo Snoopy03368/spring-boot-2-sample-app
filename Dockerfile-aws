@@ -7,6 +7,7 @@ ENV YQ_VERSION "2.7.2"
 # Install jq and yq for JSON / YAML parsing
 
 RUN apk add --update jq=${JQ_VERSION} \
+  && apk add --update curl \
   && rm -rf /var/cache/apk/*
 
 # Install AWS CLI

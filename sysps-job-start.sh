@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -e
+#!/bin/sh -e
 
 FSSESSIONID=$1
 PHASE=$2
