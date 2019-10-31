@@ -37,6 +37,7 @@ steps:
     - jq -n --arg authorEmails "${{CF_COMMIT_AUTHOR}}" --arg version "${{CF_BUILD_ID}}" --arg triggerUrl "${{CF_COMMIT_URL}}" --arg triggerRev "${{CF_REVISION}}" --argjson blueprint "`yq -c . blueprint.yml`" -f blueprint-version-jq.config >blueprint-version.json
     - aws s3 cp blueprint-version.json s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}} >blueprint-version-url
+    - cat blueprint-version-url |xargs curl -s
   check_blueprint:
     title: Check the blueprint
     stage: prepare

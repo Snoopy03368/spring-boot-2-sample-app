@@ -14,7 +14,7 @@ POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$
 
 echo "Submitting job: $POST_JOB_URL"
 
-curl -s -X POST \
+HTTP_STATUS=`curl -s -w "%{http_code}" \
   $POST_JOB_URL \
   -H 'Accept: */*' \
   -H 'Accept-Encoding: gzip, deflate' \
@@ -34,11 +34,17 @@ curl -s -X POST \
         \"blueprintName\": \"$BLUEPRINT_NAME\",
         \"blueprintVersionUrl\": \"$BLUEPRINT_VERSION_URL\",
         \"definition\":{}
-    }}">post-job
+    }}" -o post-job`
 
-cat post-job
+echo "http status: $HTTP_STATUS"
 
-JOBID=`jq -r '.|.id' post-job`
+JOBID=`jq -r -e '.|.id' post-job`
+if [ $? -ne 0 ]
+then
+  echo "Didn't get a JOB ID!  Is it possible the session id has expired?"
+  cat post-job
+  exit 1
+fi
 
 GET_JOB_URL=$POST_JOB_URL/$JOBID
 GET_JOB_STATUS_URL=$GET_JOB_URL/status
