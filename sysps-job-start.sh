@@ -11,8 +11,8 @@ SYSTEM_NAME=$8
 BLUEPRINT_VERSION_URL=$9
 
 # https://yoozc195t9.execute-api.us-east-1.amazonaws.com/v1/check/dougireton-paas-tutorial/dev/jobs
-#POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
-POST_JOB_URL=https://yoozc195t9.execute-api.us-east-1.amazonaws.com/v1/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
+POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
+#POST_JOB_URL=https://yoozc195t9.execute-api.us-east-1.amazonaws.com/v1/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
 
 echo "Submitting job: $POST_JOB_URL"
 
