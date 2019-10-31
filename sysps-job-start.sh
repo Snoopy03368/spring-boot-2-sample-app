@@ -10,13 +10,11 @@ BLUEPRINT_NAME=$7
 SYSTEM_NAME=$8
 BLUEPRINT_VERSION_URL=$9
 
-# https://yoozc195t9.execute-api.us-east-1.amazonaws.com/v1/check/dougireton-paas-tutorial/dev/jobs
-#POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
-POST_JOB_URL=https://yoozc195t9.execute-api.us-east-1.amazonaws.com/v1/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
+POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
 
 echo "Submitting job: $POST_JOB_URL"
 
-curl -s -w "Job submitted:  http_code=%{http_code}\n" \
+curl -s -w "Job submitted:  http_code=%{http_code}\n" --http1.1 \
   $POST_JOB_URL \
   -H 'Accept: */*' \
   -H 'Accept-Encoding: gzip, deflate' \
@@ -55,7 +53,7 @@ while [ $STATUS != "CLOSED" ]
 do
   sleep 3
 
-  curl -s -G -w "Job status attempt:  http_code=%{http_code}\n" \
+  curl -s -G -w "Job status attempt:  http_code=%{http_code}\n" --http1.1 \
   $GET_JOB_STATUS_URL \
   -H 'Accept: */*' \
   -H 'Accept-Encoding: gzip, deflate' \
@@ -72,7 +70,7 @@ do
 done
 
 echo "Getting status for job"
-curl -s -G -w "Reporting status for job:  http_code=%{http_code}\n" \
+curl -s -G -w "Reporting status for job:  http_code=%{http_code}\n" --http1.1 \
   $GET_JOB_URL \
   -H 'Accept: */*' \
   -H 'Accept-Encoding: gzip, deflate' \
