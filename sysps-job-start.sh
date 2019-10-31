@@ -14,7 +14,7 @@ POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$
 
 echo "Submitting job: $POST_JOB_URL"
 
-JOBID=`curl -s -X POST \
+curl -s -X POST \
   $POST_JOB_URL \
   -H 'Accept: */*' \
   -H 'Accept-Encoding: gzip, deflate' \
@@ -34,7 +34,11 @@ JOBID=`curl -s -X POST \
         \"blueprintName\": \"$BLUEPRINT_NAME\",
         \"blueprintVersionUrl\": \"$BLUEPRINT_VERSION_URL\",
         \"definition\":{}
-    }}"|jq -r '.|.id'`
+    }}">post-job
+
+cat post-job
+
+JOBID=`jq -r '.|.id' post-job`
 
 GET_JOB_URL=$POST_JOB_URL/$JOBID
 GET_JOB_STATUS_URL=$GET_JOB_URL/status
