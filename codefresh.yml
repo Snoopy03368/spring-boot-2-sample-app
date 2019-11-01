@@ -1,7 +1,9 @@
 version: '1.0'
 stages:
   - prepare
-  - test
+  - check
+  - build & test
+  - deploy
 steps:
   main_clone:
     title: Cloning main repository...
@@ -39,16 +41,26 @@ steps:
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
   check_blueprint:
-    title: Check the blueprint
-    stage: prepare
+    title: Check the blueprint (just deploy)  # TODO should do the whole thing?  Should do all of the systems
+    stage: check
     image:  "${{ToolsDockerImage}}"
     commands:
     #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
     - ./sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
   MyUnitTests:
     title: Compile/Unit test
-    stage: test
+    stage: build & test
     image: 'maven:3.5.2-jdk-8-alpine'
     commands:
       - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository package
+  deploy:
+    title: Deploy the blueprint (just one system)  # TODO should do the whole thing?  Should do all of the systems
+    stage: deploy
+    image:  "${{ToolsDockerImage}}"
+    commands:
+    - aws s3 cp target/spring-boot-sample-actuator.jar s3://${BLUEPRINT_VERSION_BUCKET}/artifacts/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
+    - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET}/artifacts/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}} >build-snapshot-url
+    - BUILD_SNAPSHOT_URL=`cat build-snapshot-url`
+    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap                  blueprint                    system  TODO make loop for each system?       BP Version URL
+    - ./sysps-job-start.sh $FSSESSIONID "deploy" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" $BUILD_SNAPSHOT_URL `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
 
