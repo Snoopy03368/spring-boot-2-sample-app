@@ -1,8 +1,8 @@
 version: '1.0'
 stages:
   - prepare
-  - check
   - build & test
+  - validate
   - deploy
 steps:
   main_clone:
@@ -42,7 +42,7 @@ steps:
     - cat blueprint-version-url |xargs curl -s
   check_blueprint:
     title: Check the blueprint (just deploy)  # TODO should do the whole thing?  Should do all of the systems
-    stage: check
+    stage: build & test
     image:  "${{ToolsDockerImage}}"
     commands:
     #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
@@ -53,7 +53,19 @@ steps:
     image: 'maven:3.5.2-jdk-8-alpine'
     commands:
       - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository package
-  deploy:
+  deploy_dev_before_validate:
+    title: Start the deploy that will be used for the validation
+    stage: validate
+    image:  "${{ToolsDockerImage}}"
+    commands:
+      - echo "If this was real it would do a deploy and then run mvn verify."
+  validate_dev:
+    title: Execute the Acceptance Tests
+    stage: validate
+    image:  "${{ToolsDockerImage}}"
+    commands:
+      - echo "If this was real it would do a deploy and then run mvn verify."
+  deploy-dev:
     title: Deploy the blueprint (just one system)  # TODO should do the whole thing?  Should do all of the systems
     stage: deploy
     image:  "${{ToolsDockerImage}}"

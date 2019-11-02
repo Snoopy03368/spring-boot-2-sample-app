@@ -30,7 +30,7 @@ do
   done
 
   echo "Uploading artifacts for:  $service_name"
-  aws s3 cp $zip_name s3://$BUCKET_OBJECT_BASE
+  aws s3 cp $zip_name s3://$BUCKET_OBJECT_BASE/$zip_name
   aws s3 presign s3://$BUCKET_OBJECT_BASE/$zip_name >${zip_name}-presign-url
   PRESIGNED_URL=`cat ${zip_name}-presign-url`
   # adding to the list of serviceArtifactUrls
