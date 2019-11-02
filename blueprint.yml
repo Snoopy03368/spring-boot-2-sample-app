@@ -34,6 +34,8 @@ deploy:
         type: Blue Green v1_0
       elb_options:
         health_check: /actuator/health
+      environment:
+        PORT: 8080
       binding_sets:
         cjr.paas-tutorial:
         - type: Service v1_0
