@@ -10,6 +10,7 @@ BLUEPRINT_NAME=$7
 SYSTEM_NAME=$8
 BLUEPRINT_VERSION_URL=$9
 SERVICE_ARTIFACTS_JSON_FILE=${10}
+SLEEP_DURATION_SEC=60
 
 POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
 
@@ -19,6 +20,11 @@ SERVICE_ARTIFACT_URLS="null"
 if [ ! -z $SERVICE_ARTIFACTS_JSON_FILE ] && [ -f $SERVICE_ARTIFACTS_JSON_FILE ];
 then
 SERVICE_ARTIFACT_URLS=`cat $SERVICE_ARTIFACTS_JSON_FILE`
+fi
+
+if [ $PHASE == "check" ];
+then
+  SLEEP_DURATION_SEC=2
 fi
 
 curl -s -w "Job submitted:  http_code=%{http_code}\n" --http1.1 \
@@ -59,7 +65,7 @@ TRY_ATTEMPT=1
 STATUS="INPROGRESS"
 while [ $STATUS != "CLOSED" ]
 do
-  sleep 3
+  sleep $SLEEP_DURATION_SEC
 
   curl -s -G -w "Job status attempt:  http_code=%{http_code}\n" --http1.1 \
   $GET_JOB_STATUS_URL \
