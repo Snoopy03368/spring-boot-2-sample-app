@@ -43,6 +43,7 @@ steps:
     - cat blueprint-version-url |xargs curl -s
   check_parallel_tasks:
     type: parallel
+    stage: prepare
     steps:
       build_check_maven-build:
         title: Check the blueprint for the 'maven-build' build
@@ -92,11 +93,11 @@ steps:
     image:  "${{ToolsDockerImage}}"
     commands:
       - echo "If this was real it would do mvn verify."
-      - cat deploy-$SYSTEM_NAME-report
   integrate_dev-app-validations:
     title: Integrate the 'dev' system (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     commands:
       - echo "If this was real it would do call SysPS to integrate."
-
+      - SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+      - cat deploy-$SYSTEM_NAME-report
