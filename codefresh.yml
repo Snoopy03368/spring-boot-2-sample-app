@@ -58,9 +58,10 @@ steps:
     stage: deploy
     image:  "${{ToolsDockerImage}}"
     commands:
-    - aws s3 cp target/spring-boot-sample-actuator.jar s3://${BLUEPRINT_VERSION_BUCKET}/artifacts/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
-    - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET}/artifacts/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}} >build-snapshot-url
-    - BUILD_SNAPSHOT_URL=`cat build-snapshot-url`
-    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap                  blueprint                    system  TODO make loop for each system?       BP Version URL
-    - ./sysps-job-start.sh $FSSESSIONID "deploy" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" $BUILD_SNAPSHOT_URL `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
+    - BLUEPRINT_NAME=`yq -r '.|.name' blueprint.yml`
+    - SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+    - SERVICE_ARTIFACTS_JSON_FILE=$BLUEPRINT_NAME-$SYSTEM_NAME-service-artifacts-url.json
+    - ./put-services-zip-to-s3.sh $BLUEPRINT_NAME $SYSTEM_NAME report $BLUEPRINT_VERSION_BUCKET ${{CF_REPO_NAME}} ${{CF_BRANCH}} ${{CF_SHORT_REVISION}} ${{CF_BUILD_ID}} $SERVICE_ARTIFACTS_JSON_FILE
+    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap blueprint       system        BP Version URL             ServiceArtifactUrls file
+    - ./sysps-job-start.sh $FSSESSIONID "deploy" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null"  $BLUEPRINT_NAME $SYSTEM_NAME `cat blueprint-version-url` $SERVICE_ARTIFACTS_JSON_FILE
 

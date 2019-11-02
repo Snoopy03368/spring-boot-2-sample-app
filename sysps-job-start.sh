@@ -9,10 +9,17 @@ BUILDSNAPSHOT_URL=$6
 BLUEPRINT_NAME=$7
 SYSTEM_NAME=$8
 BLUEPRINT_VERSION_URL=$9
+SERVICE_ARTIFACTS_JSON_FILE=${10}
 
 POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
 
 echo "Submitting job: $POST_JOB_URL"
+
+SERVICE_ARTIFACT_URLS="{}"
+if [ -f $SERVICE_ARTIFACTS_JSON_FILE ];
+then
+SERVICE_ARTIFACT_URLS=`cat $SERVICE_ARTIFACTS_JSON_FILE`
+fi
 
 curl -s -w "Job submitted:  http_code=%{http_code}\n" --http1.1 \
   $POST_JOB_URL \
@@ -32,6 +39,7 @@ curl -s -w "Job submitted:  http_code=%{http_code}\n" --http1.1 \
         \"systemName\": \"$SYSTEM_NAME\",
         \"blueprintName\": \"$BLUEPRINT_NAME\",
         \"blueprintVersionUrl\": \"$BLUEPRINT_VERSION_URL\",
+        \"serviceArtifactUrls\": $SERVICE_ARTIFACT_URLS,
         \"definition\":{}
     }}" -o post-job
 
@@ -65,7 +73,7 @@ do
   -H 'cache-control: no-cache' -o status-$TRY_ATTEMPT
 
   STATUS=`jq -r '.|.executionStatus' status-$TRY_ATTEMPT`
-  ((TRY_ATTEMPT=TRY_ATTEMPT+1))
+  TRY_ATTEMPT=$((TRY_ATTEMPT+1))
   echo "Job status: '$STATUS'"
 done
 
