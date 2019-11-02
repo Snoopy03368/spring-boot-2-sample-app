@@ -48,6 +48,9 @@ steps:
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
+        - name: ToolsDockerImage
+          on:
+            - success
         - name: CreateAWSCredentialsFile
           on:
             - success
