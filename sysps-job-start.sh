@@ -93,13 +93,13 @@ curl -s -G -w "Reporting status for job:  http_code=%{http_code}\n" --http1.1 \
   -H 'Connection: keep-alive' \
   -H 'Content-Type: application/json' \
   -H 'User-Agent: roskelleycj/1.0 (manual)' \
-  -H 'cache-control: no-cache' -o report
+  -H 'cache-control: no-cache' -o $PHASE-$SYSTEM_NAME-report
 
 
-echo "Found warnings: `jq '.|.warnings' report`"
-echo "Found errors:  `jq '.|.errors' report`"
+echo "Found warnings: `jq '.|.warnings' $PHASE-$SYSTEM_NAME-report`"
+echo "Found errors:  `jq '.|.errors' $PHASE-$SYSTEM_NAME-report`"
 
-ERRORS=`jq '.|.errors|length' report`
+ERRORS=`jq '.|.errors|length' $PHASE-$SYSTEM_NAME-report`
 if [ $ERRORS -ne 0 ];
 then
   exit 1
