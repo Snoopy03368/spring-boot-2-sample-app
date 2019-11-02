@@ -6,13 +6,6 @@ stages:
   - deploy
   - terminate
 steps:
-  main_clone:
-    title: Cloning main repository...
-    stage: prepare
-    type: git-clone
-    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
-    revision: master
-    git: github
   ToolsDockerImage:    # TODO:  would move this too another pipeline
     title: Building Docker Image for AWS Cli, jq, yq, etc.
     type: build
