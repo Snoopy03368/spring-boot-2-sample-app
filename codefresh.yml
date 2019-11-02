@@ -1,11 +1,5 @@
 version: '1.0'
 mode: parallel
-stages:
-  - prepare
-  - build
-  - validate
-  - deploy
-  - terminate
 steps:
   main_clone:
     title: Cloning main repository...
