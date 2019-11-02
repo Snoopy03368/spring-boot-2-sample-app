@@ -41,31 +41,34 @@ steps:
     - aws s3 cp blueprint-version.json s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET}/blueprints/${{CF_REPO_NAME}}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
-  build_check_maven-build:
-    title: Check the blueprint for the 'maven-build' build
-    stage: prepare
-    image:  "${{ToolsDockerImage}}"
-    commands:
-      - echo "If this was real it would do check of the build."
-  validate_check:
-    title: Check the blueprint for 'validate' section
-    stage: prepare
-    image:  "${{ToolsDockerImage}}"
-    commands:
-      - echo "If this was real it would do check of the validate."
-  deliver_check:
-    title: Check the blueprint for 'deliver' section
-    stage: prepare
-    image:  "${{ToolsDockerImage}}"
-    commands:
-      - echo "If this was real it would do check of the deliver."
-  deploy_check_dev:
-    title: Check the blueprint the 'dev' system
-    stage: prepare
-    image:  "${{ToolsDockerImage}}"
-    commands:
-    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
-    - ./sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
+  check_parallel_tasks:
+    type: parallel
+    steps:
+      build_check_maven-build:
+        title: Check the blueprint for the 'maven-build' build
+        stage: prepare
+        image:  "${{ToolsDockerImage}}"
+        commands:
+          - echo "If this was real it would do check of the build."
+      validate_check:
+        title: Check the blueprint for 'validate' section
+        stage: prepare
+        image:  "${{ToolsDockerImage}}"
+        commands:
+          - echo "If this was real it would do check of the validate."
+      deliver_check:
+        title: Check the blueprint for 'deliver' section
+        stage: prepare
+        image:  "${{ToolsDockerImage}}"
+        commands:
+          - echo "If this was real it would do check of the deliver."
+      deploy_check_dev:
+        title: Check the blueprint the 'dev' system
+        stage: prepare
+        image:  "${{ToolsDockerImage}}"
+        commands:
+        #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
+        - ./sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
   build_maven-build:
     title: Compile/Unit test
     stage: build
