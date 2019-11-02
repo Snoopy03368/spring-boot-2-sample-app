@@ -54,7 +54,7 @@ steps:
     commands:
       - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository package
   dev_deploy:
-    title: Deploy the blueprint (just one system)  # TODO should do the whole thing?  Should do all of the systems
+    title: Deploy 'dev' system
     stage: validate
     image:  "${{ToolsDockerImage}}"
     commands:
@@ -65,13 +65,13 @@ steps:
     #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap blueprint       system        BP Version URL             ServiceArtifactUrls file
     - ./sysps-job-start.sh $FSSESSIONID "deploy" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null"  $BLUEPRINT_NAME $SYSTEM_NAME `cat blueprint-version-url` $SERVICE_ARTIFACTS_JSON_FILE
   dev_validate:
-    title: Execute the Acceptance Tests
+    title: Execute the Acceptance Tests on 'dev' (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     commands:
       - echo "If this was real it would do mvn verify."
   dev_integrate:
-    title: If the ATs passed we should integrate
+    title: Integrate the 'dev' system (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     commands:
