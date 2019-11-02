@@ -53,13 +53,11 @@ steps:
     image: 'maven:3.5.2-jdk-8-alpine'
     commands:
       - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository package
-      - $PWD
   deploy:
     title: Deploy the blueprint (just one system)  # TODO should do the whole thing?  Should do all of the systems
     stage: deploy
     image:  "${{ToolsDockerImage}}"
     commands:
-    - $PWD
     - BLUEPRINT_NAME=`yq -r '.|.name' blueprint.yml`
     - SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
     - SERVICE_ARTIFACTS_JSON_FILE=$BLUEPRINT_NAME-$SYSTEM_NAME-service-artifacts-url.json

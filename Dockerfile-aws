@@ -8,6 +8,7 @@ ENV YQ_VERSION "2.7.2"
 
 RUN apk add --update jq=${JQ_VERSION} \
   && apk add --update curl \
+  && apk add --update zip \
   && rm -rf /var/cache/apk/*
 
 # Install AWS CLI
