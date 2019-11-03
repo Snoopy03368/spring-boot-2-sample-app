@@ -14,7 +14,7 @@ rm $BLUEPRINT_NAME-*-artifacts.zip
 
 ./put-services-zip-to-s3.sh $BLUEPRINT_NAME \
                          $SYSTEM_NAME  \
-                         report \
+                         check-dev-report \
                          $BLUEPRINT_VERSION_BUCKET \
                          $REPO_NAME \
                          $BRANCH \
