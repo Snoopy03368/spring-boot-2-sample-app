@@ -13,6 +13,11 @@ SERVICE_ARTIFACT_URLS_STR=${10:-""}
 SLEEP_DURATION_SEC=60
 
 POST_JOB_URL=https://api.fsdpt.org/service_provisioning/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
+if [[ "$FSSESSIONID" =~ .*-integ ]];
+then
+  # the dev-dev version of sysps api
+  POST_JOB_URL=https://5fut8v0p96.execute-api.us-east-1.amazonaws.com/v1/$PHASE/$BLUEPRINT_NAME/$SYSTEM_NAME/jobs
+fi
 
 echo "Submitting job: $POST_JOB_URL"
 

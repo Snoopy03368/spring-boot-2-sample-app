@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 BLUEPRINT_NAME=`yq -r '.|.name' blueprint.yml`
-SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml` # gets the `dev` system name
+CHECK_RESULTS_FILE=check-dev-report  # this is from the `sysps-job-start.sh` for the check on the `dev` system.
 BLUEPRINT_VERSION_BUCKET=adhoc-us-east-1-074150922133/roskelleycj
 REPO_NAME=spring-boot-2-sample-app
 BRANCH=master
@@ -14,7 +15,7 @@ rm $BLUEPRINT_NAME-*-artifacts.zip
 
 ./put-services-zip-to-s3.sh $BLUEPRINT_NAME \
                          $SYSTEM_NAME  \
-                         check-dev-report \
+                         $CHECK_RESULTS_FILE \
                          $BLUEPRINT_VERSION_BUCKET \
                          $REPO_NAME \
                          $BRANCH \
