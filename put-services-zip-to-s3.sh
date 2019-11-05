@@ -35,7 +35,7 @@ do
   aws s3 presign s3://$BUCKET_OBJECT_BASE/$zip_name >${zip_name}-presign-url
   PRESIGNED_URL=`cat ${zip_name}-presign-url`
   # adding to the list of serviceArtifactUrls
-  jq -n --arg service_name $service_name --arg url $PRESIGNED_URL '[{"key":$ARGS.named["service_name"], "value":$ARGS.named["url"]}]|from_entries' >add-service-name-url.json
-  jq -e -s '.[0] * .[1]' $SERVICE_ARTIFACTS_JSON_FILE add-service-name-url.json >copy-service-artifacts-json
-  mv copy-service-artifacts-json $SERVICE_ARTIFACTS_JSON_FILE
+  jq -n --arg service_name $service_name --arg url $PRESIGNED_URL '[{"key":$ARGS.named["service_name"], "value":$ARGS.named["url"]}]|from_entries' >${zip_name}-add-service-name-url.json
+  jq -e -s '.[0] * .[1]' $SERVICE_ARTIFACTS_JSON_FILE ${zip_name}-add-service-name-url.json >${zip_name}-copy-service-artifacts-json
+  mv ${zip_name}-copy-service-artifacts-json $SERVICE_ARTIFACTS_JSON_FILE
 done
