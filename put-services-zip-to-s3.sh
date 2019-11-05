@@ -6,14 +6,11 @@ BLUEPRINT_NAME=$1
 SYSTEM_NAME=$2
 CHECK_RESULTS_FILE=$3
 ARTIFACT_BUCKET=$4
-REPO_NAME=$5
-BRANCH=$6
-SHORT_REVISION=$7
-BUILD_ID=$8
-SERVICE_ARTIFACTS_JSON_FILE=$9
+BUILD_ID=$5
+SERVICE_ARTIFACTS_JSON_FILE=$6
 
 # Just do something to keep things from stepping other uploads.
-BUCKET_OBJECT_BASE=${ARTIFACT_BUCKET}/artifacts/${REPO_NAME}/${BRANCH}/${SHORT_REVISION}/${BUILD_ID}
+BUCKET_OBJECT_BASE=${ARTIFACT_BUCKET}/${BUILD_ID}
 SERVICE_NAMES=`jq -r '.|.expectedPaths|keys|.[]' $CHECK_RESULTS_FILE`
 
 # generate the artifacts json snippet
@@ -32,6 +29,7 @@ do
 
   echo "Uploading artifacts for:  $service_name"
   aws s3 cp $zip_name s3://$BUCKET_OBJECT_BASE/$zip_name
+  # because we are using the adhoc bucket we have to grant permissions.  Normal automation wouldn't need this.
   aws s3 presign s3://$BUCKET_OBJECT_BASE/$zip_name >${zip_name}-presign-url
   PRESIGNED_URL=`cat ${zip_name}-presign-url`
   # adding to the list of serviceArtifactUrls

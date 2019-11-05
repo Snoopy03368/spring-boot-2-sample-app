@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FSSESSIONID=`jq -r '.|.session.sessionId' ~/.paas-portal`
+FSSESSIONID="b3e5cde4-17e8-45f3-99fb-dcaad3c80f16-integ" #`jq -r '.|.session.sessionId' ~/.paas-portal`
 PHASE="check"
 VERSION="version"
 TRIGGER_REV="sha"
