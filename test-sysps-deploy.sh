@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 FSSESSIONID="b3e5cde4-17e8-45f3-99fb-dcaad3c80f16-integ" #`jq -r '.|.session.sessionId' ~/.paas-portal`
-PHASE="check"
+PHASE="deploy"
 BLUEPRINT_NAME=`yq -r '.|.name' blueprint.yml`
 SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
 SERVICE_ARTIFACTS_JSON_FILE=$BLUEPRINT_NAME-$SYSTEM_NAME-service-artifacts-url.json

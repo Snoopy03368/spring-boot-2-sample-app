@@ -19,6 +19,6 @@ EXPIRATION=`jq -r '.|.Credentials.Expiration' /tmp/token.json`
 sed -i '' -e "s|expiration.*|expiration=$AWS_SECURITY_TOKEN|g" /tmp/temp-aws-creds
 
 AWS_CREDENTIALS_FILE=`base64 /tmp/temp-aws-creds`
-FSSESSIONID=`jq -r '.|.session.sessionId' ~/.paas-portal`
+FSSESSIONID=`jq -r '.|.session.sessionId' ~/.paas-portal-integration`
 cat creds-spec.yml|sed -e "s|AWS_CREDENTIALS_FILE:.*|AWS_CREDENTIALS_FILE: ${AWS_CREDENTIALS_FILE}|"|sed -e "s|FSSESSIONID:.*|FSSESSIONID: ${FSSESSIONID}|">/tmp/gen-creds-spec.yml
 codefresh patch context -f /tmp/gen-creds-spec.yml
