@@ -42,13 +42,25 @@ steps:
         - name: main_clone
           on:
             - success
+  valid_yaml:
+    title: Validate the blueprint.yml is valid.
+    stage: prepare
+    image:  "${{ToolsDockerImage}}"
+    when:
+      steps:
+        - name: ToolsDockerImage
+          on:
+            - success
+    commands:
+    - cat blueprint.yml
+    - yq -r '.' blueprint.yml
   publish_blueprint:
     title: Publish the blueprint for checking
     stage: prepare
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
-        - name: ToolsDockerImage
+        - name: valid_yaml
           on:
             - success
         - name: CreateAWSCredentialsFile
