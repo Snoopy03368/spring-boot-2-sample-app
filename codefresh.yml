@@ -101,13 +101,13 @@ steps:
     stage: prepare
     image:  r.cfcr.io/snoopy03368/sysps-api:paas-sps-v0.0.3
     environment:
-    - FSSESSIONID=$FSSESSIONID
+    - FSSESSIONID=${{FSSESSIONID}}
     - PHASE=check
     - BUILD_NUMBER=${{CF_BUILD_ID}}
     - TRIGGER_REV=${{CF_REVISION}}
     - TRIGGER_URL=${{CF_COMMIT_URL}}
     - BLUEPRINT_NAME=$BLUEPRINT_NAME
-    - SYSTEM_NAME=$SYSTEM_NAME_DEV
+    - SYSTEM_NAME=${{SYSTEM_NAME_DEV}}
     - BLUEPRINT_VERSION_URL=$BLUEPRINT_VERSION_URL
     when:
       steps:
