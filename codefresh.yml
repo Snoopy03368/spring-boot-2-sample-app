@@ -62,7 +62,7 @@ steps:
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET_PATH} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
     - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME BLUEPRINT_VERSION_URL=`cat blueprint-version-url` SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
-  build_check_maven-build:
+  build_check_maven_build:
     title: Check the blueprint for the 'maven-build' build
     stage: prepare
     image:  "${{ToolsDockerImage}}"
@@ -117,24 +117,24 @@ steps:
       BLUEPRINT_VERSION_URL: ${{BLUEPRINT_VERSION_URL}}
       AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
       AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
-  build_maven-build:
+  build_maven_build:
     title: Compile/Unit test
     stage: build
     image: 'maven:3.5.2-jdk-8-alpine'
     when:
       steps:
-        - name: build_check_maven-build
+        - name: build_check_maven_build
           on:
             - success
     commands:
       - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository package
-  deploy_dev-app-validation:
+  deploy_dev_app_validation:
     title: Deploy 'dev' system
     stage: validate
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
-        - name: build_maven-build
+        - name: build_maven_build
           on:
             - success
         - name: deploy_check_dev
@@ -152,38 +152,38 @@ steps:
     - SERVICE_ARTIFACTS_JSON=`jq '.|tostring' $BLUEPRINT_NAME-$SYSTEM_NAME-service-artifacts-url.json`
     #                       sessionid    phase    build#             triggerRev  triggerUrl        buildSnap blueprint       system        BP Version URL             ServiceArtifactUrls json
     - ./sysps-job-start.sh $FSSESSIONID "deploy" "$BUILD_NUMBER" "$TRIGGER_REV" "$TRIGGER_URL" "null"  $BLUEPRINT_NAME $SYSTEM_NAME $BLUEPRINT_VERSION_URL $SERVICE_ARTIFACTS_JSON
-  validate_dev-app-validation:
+  validate_dev_app_validation:
     title: Execute the Acceptance Tests on 'dev' (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
-        - name: deploy_dev-app-validation
+        - name: deploy_dev_app_validation
           on:
             - success
     fail_fast: false # don't let this fail the pipeline, but let integrate do some work after the fact.
     commands:
       - echo "If this was real it would do mvn verify."
-  integrate_success-dev-app-validations:
+  integrate_success_dev_app_validations:
     title: On Acceptance Success Integrate the 'dev' system (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
-        - name: validate_dev-app-validation
+        - name: validate_dev_app_validation
           on:
             - success
     commands:
       - echo "If this was real it would do call SysPS to integrate with the validation success."
       - SYSTEM_NAME=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
       - cat deploy-$SYSTEM_NAME-report
-  integrate_failure-dev-app-validations:
+  integrate_failure_dev_app_validations:
     title: On Acceptance Failure Integrate the 'dev' system (fake)
     stage: validate
     image:  "${{ToolsDockerImage}}"
     when:
       steps:
-        - name: validate_dev-app-validation
+        - name: validate_dev_app_validation
           on:
             - failure
     commands:
