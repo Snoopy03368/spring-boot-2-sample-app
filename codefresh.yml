@@ -61,7 +61,8 @@ steps:
     - ./put-blueprint-version-to-s3.sh $BLUEPRINT_NAME "${{CF_BUILD_ID}}" "${{CF_COMMIT_URL}}" "${{CF_REVISION}}" "${{CF_COMMIT_AUTHOR}}" $BLUEPRINT_VERSION_BUCKET_PATH
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET_PATH} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
-    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME BLUEPRINT_VERSION_URL_FILE="blueprint-version-url" SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+    - echo "BLUEPRINT_VERSION_URL=\"`cat blueprint-version-url`\"" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
+    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
   build_check_maven_build:
     title: Check the blueprint for the 'maven-build' build
     stage: prepare
