@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 FSSESSIONID=`jq -r '.|.session.sessionId' ~/.paas-portal-integration`
 PHASE="check"
 VERSION="version"
