@@ -108,6 +108,7 @@ steps:
 #    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
 #    - ./sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
   deploy_check_dev:
+    stage: prepare
     type: snoopy03368/sysps-api
     arguments:
       FSSESSIONID: ${{FSSESSIONID}}
@@ -117,6 +118,11 @@ steps:
       BLUEPRINT_VERSION_URL: ${{BLUEPRINT_VERSION_URL}}
       AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
       AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
+    when:
+      steps:
+        - name: publish_blueprint
+          on:
+            - success
   build_maven_build:
     title: Compile/Unit test
     stage: build
