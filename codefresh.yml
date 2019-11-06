@@ -61,7 +61,7 @@ steps:
     - ./put-blueprint-version-to-s3.sh $BLUEPRINT_NAME "${{CF_BUILD_ID}}" "${{CF_COMMIT_URL}}" "${{CF_REVISION}}" "${{CF_COMMIT_AUTHOR}}" $BLUEPRINT_VERSION_BUCKET_PATH
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET_PATH} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
-    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME BLUEPRINT_VERSION_URL=`cat blueprint-version-url` SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
   build_check_maven_build:
     title: Check the blueprint for the 'maven-build' build
     stage: prepare
@@ -108,6 +108,7 @@ steps:
 #    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
 #    - ./sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" `yq -r '.|.name' blueprint.yml` `yq -r '.|.deploy|keys|.[0]' blueprint.yml` `cat blueprint-version-url`
   deploy_check_dev:
+    title: Check the blueprint for the 'dev' system
     stage: prepare
     type: snoopy03368/sysps-api
     arguments:
@@ -115,7 +116,7 @@ steps:
       PHASE: check
       BLUEPRINT_NAME: ${{BLUEPRINT_NAME}}
       SYSTEM_NAME: ${{SYSTEM_NAME_DEV}}
-      BLUEPRINT_VERSION_URL: ${{BLUEPRINT_VERSION_URL}}
+      BLUEPRINT_VERSION_URL: `cat blueprint-version-url`
       AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
       AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
     when:
