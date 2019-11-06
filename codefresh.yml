@@ -100,15 +100,20 @@ steps:
     title: Check the blueprint the 'dev' system
     stage: prepare
     image:  r.cfcr.io/snoopy03368/sysps-api:paas-sps-v0.0.3
+    environment:
+    - FSSESSIONID=$FSSESSIONID
+    - PHASE=check
+    - BUILD_NUMBER=${{CF_BUILD_ID}}
+    - TRIGGER_REV=${{CF_REVISION}}
+    - TRIGGER_URL=${{CF_COMMIT_URL}}
+    - BLUEPRINT_NAME=$BLUEPRINT_NAME
+    - SYSTEM_NAME=$SYSTEM_NAME_DEV
+    - BLUEPRINT_VERSION_URL=$BLUEPRINT_VERSION_URL
     when:
       steps:
         - name: publish_blueprint
           on:
             - success
-    commands:
-    - ls -altr /
-    #                       sessionid    phase    build#             triggerRev          triggerUrl        buildSnap  blueprint                    system  TODO make loop for each system?       BP Version URL
-    - /sysps-api/sysps-job-start.sh $FSSESSIONID "check" "${{CF_BUILD_ID}}" "${{CF_REVISION}}" "${{CF_COMMIT_URL}}" "null" $BLUEPRINT_NAME $SYSTEM_NAME_DEV $BLUEPRINT_VERSION_URL
 #  deploy_check_dev:
 #    title: Check the blueprint for the 'dev' system
 #    stage: prepare
