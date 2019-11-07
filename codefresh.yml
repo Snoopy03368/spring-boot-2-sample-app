@@ -74,7 +74,7 @@ steps:
     - aws s3 presign s3://${BLUEPRINT_VERSION_BUCKET_PATH} >blueprint-version-url
     - cat blueprint-version-url |xargs curl -s
     - echo "BLUEPRINT_VERSION_URL=`cat blueprint-version-url`" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
-    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME SYSTEM_NAME_DEV=`yq -r '.|.deploy|keys|.[0]' blueprint.yml`
+    - cf_export BLUEPRINT_NAME=$BLUEPRINT_NAME
   build_check_maven_build:
     title: Check the blueprint for the 'maven-build' build
     stage: prepare
@@ -108,18 +108,16 @@ steps:
             - success
     commands:
       - echo "If this was real it would do check of the deliver."
-  deploy_check_dev:
-    title: Check the blueprint the 'dev' system
+  deploy_check:
+    title: Check the 'deploy' section of the blueprint
     stage: prepare
     image:  r.cfcr.io/snoopy03368/sysps-api:paas-sps-v0.0.3
     environment:
     - FSSESSIONID=${{FSSESSIONID}}
-    - PHASE=check
     - BUILD_NUMBER=${{CF_BUILD_ID}}
     - TRIGGER_REV=${{CF_REVISION}}
     - TRIGGER_URL=${{CF_COMMIT_URL}}
     - BLUEPRINT_NAME=$BLUEPRINT_NAME
-    - SYSTEM_NAME=${{SYSTEM_NAME_DEV}}
     - BLUEPRINT_VERSION_URL=$BLUEPRINT_VERSION_URL
     when:
       steps:
