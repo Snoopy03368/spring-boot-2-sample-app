@@ -111,7 +111,7 @@ steps:
   deploy_check:
     title: Check the 'deploy' section of the blueprint
     stage: prepare
-    image:  r.cfcr.io/snoopy03368/sysps-api:paas-sps-v0.0.3
+    image:  r.cfcr.io/snoopy03368/sysps-api-check:paas-sps-v0.0.3
     environment:
     - FSSESSIONID=${{FSSESSIONID}}
     - BUILD_NUMBER=${{CF_BUILD_ID}}
@@ -124,23 +124,6 @@ steps:
         - name: publish_blueprint
           on:
             - success
-#  deploy_check_dev:
-#    title: Check the blueprint for the 'dev' system
-#    stage: prepare
-#    type: snoopy03368/sysps-api
-#    arguments:
-#      FSSESSIONID: ${{FSSESSIONID}}
-#      PHASE: check
-#      BLUEPRINT_NAME: ${{BLUEPRINT_NAME}}
-#      SYSTEM_NAME: ${{SYSTEM_NAME_DEV}}
-#      BLUEPRINT_VERSION_URL: ${{BLUEPRINT_VERSION_URL}}
-#      AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
-#      AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
-#    when:
-#      steps:
-#        - name: publish_blueprint
-#          on:
-#            - success
   build_maven_build:
     title: Compile/Unit test
     stage: build
