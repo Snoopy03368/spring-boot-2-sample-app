@@ -1,19 +1,20 @@
+---
 version: 1.0
 name: java-stack-testapp
 
 build:
-- name: maven-build
-  type: maven
-  run_sonar: true
+  - name: maven-build
+    type: maven
+    run_sonar: true
 
 validate:
-- type: Pre-Integrate v1_0
-  tests:
-  - name: dev-app-validation
-    test_type: maven
-    execution_directory: acceptance
-    validation_systems:
-    - dev
+  - type: Pre-Integrate v1_0
+    tests:
+      - name: dev-app-validation
+        test_type: maven
+        execution_directory: acceptance
+        validation_systems:
+          - dev
 
 deploy:
   dev:
@@ -23,7 +24,7 @@ deploy:
       path_to_artifact: target/spring-boot-sample-actuator.jar
       platform:
         name: Java 8 running on 64bit Amazon Linux
-      instance_type:  t3.micro
+      instance_type: t3.micro
       jvm_options: -Xms256m -Xmx256m
       instrumentation:
         appdynamics: false
@@ -38,15 +39,15 @@ deploy:
         PORT: 8080
       binding_sets:
         cjr.paas-tutorial:
-        - type: Service v1_0
-          sites:
-          - dev
+          - type: Service v1_0
+            sites:
+              - dev
 
 deliver:
   deploy_order:
     - name: dev-app-validation
       type: independent
       systems: dev
-  terminate:                                 # clean-up validation system following validation.
+  terminate:  # clean-up validation system following validation.
     type: Terminate v1_0
     systems: dev
