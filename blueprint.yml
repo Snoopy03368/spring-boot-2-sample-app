@@ -17,6 +17,31 @@ validate:
           - dev
 
 deploy:
+  dev1:
+    app:
+      location: development-fh5-useast1-primary-1
+      type: Beanstalk for Runnable Jar Web Service v1_1
+      path_to_artifact: target/spring-boot-sample-actuator.jar
+      platform:
+        name: Java 8 running on 64bit Amazon Linux
+      instance_type: t3.micro
+      jvm_options: -Xms256m -Xmx256m
+      instrumentation:
+        appdynamics: false
+      autoscale_options:
+        min_instances: 1
+        max_instances: 1
+      deployment_policy:
+        type: Blue Green v1_0
+      elb_options:
+        health_check: /actuator/health
+      environment_variables:
+        PORT: 8080
+      binding_sets:
+        cjr.paas-tutorial:
+          - type: Service v1_0
+            sites:
+              - dev
   dev:
     app:
       location: development-fh5-useast1-primary-1
