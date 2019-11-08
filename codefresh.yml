@@ -53,7 +53,7 @@ steps:
             - success
     commands:
     - cat blueprint.yml
-    - yq -r '.' blueprint.yml
+    - yq -r '.' blueprint.yml  # TODO: replace with yamllinit -d relaxed ??
   publish_blueprint:
     title: Publish the blueprint for checking
     stage: prepare
